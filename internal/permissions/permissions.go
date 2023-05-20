@@ -1,4 +1,4 @@
-package helper
+package permissions
 
 // permissions that is exported
 type Permissions interface {
@@ -9,8 +9,12 @@ type Permissions interface {
 type permission int
 
 const (
+	// user roles
 	User permission = iota
 	Admin
+
+	// system roles
+	Frontend
 )
 
 func (p permission) Has(perm Permissions) bool {
@@ -34,10 +38,11 @@ type multipermission map[permission]int
 func (m multipermission) Has(perm Permissions) bool {
 	if tmultiperm, e := perm.(multipermission); e {
 		for key := range tmultiperm {
-			if _, exists := m[key]; !exists {
-				return false
+			if _, exists := m[key]; exists {
+				return true
 			}
 		}
+		return false
 	}
 
 	if tperm, e := perm.(permission); e {

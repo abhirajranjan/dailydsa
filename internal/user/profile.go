@@ -3,18 +3,27 @@ package user
 import (
 	"net/http"
 
+	"github.com/abhirajranjan/dailydsa/internal/database"
 	"github.com/gin-gonic/gin"
 )
 
-type profileResponse struct {
-	Name string
-}
-
 // handle user profile
 func profileHandler(ctx *gin.Context) {
-	// test response
-	res := profileResponse{
-		Name: "abhiraj ranjan",
+	var sessionID int
+
+	sessionID_string, ok := ctx.Get("sessionID")
+	if !ok {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+		return
 	}
-	ctx.JSON(http.StatusOK, res)
+
+	sessionID = sessionID_string.(int)
+	profile, err := database.GetProfileBySessionID(sessionID)
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+
+	ctx.JSON(http.StatusOK, profile)
 }
