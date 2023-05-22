@@ -1,8 +1,22 @@
 package main
 
-import "github.com/abhirajranjan/dailydsa/internal/server"
+import (
+	"log"
+
+	"github.com/abhirajranjan/dailydsa/internal/auth"
+	"github.com/abhirajranjan/dailydsa/internal/config"
+	"github.com/abhirajranjan/dailydsa/internal/database"
+	"github.com/abhirajranjan/dailydsa/internal/server"
+)
 
 func main() {
-	a := server.Serve()
-	a.Run(":8080")
+	cfg, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal(err)
+	}
+	print(cfg)
+	db := database.CreateDatabaseBridge(cfg.Database)
+	auth.InitAuth(db, cfg.Auth)
+	a := server.Serve(db)
+	a.Run("localhost:1212")
 }

@@ -3,26 +3,23 @@ package user
 import (
 	"net/http"
 
-	"github.com/abhirajranjan/dailydsa/internal/database"
 	"github.com/gin-gonic/gin"
 )
 
 // handle user profile
-func profileHandler(ctx *gin.Context) {
+func profileHandler(ctx *gin.Context, db databasebridge) {
 	var sessionID int
 
 	sessionID_string, ok := ctx.Get("sessionID")
 	if !ok {
-		ctx.Status(http.StatusInternalServerError)
-		ctx.Abort()
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
 	sessionID = sessionID_string.(int)
-	profile, err := database.GetProfileBySessionID(sessionID)
+	profile, err := db.GetProfileBySessionID(sessionID)
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
-		ctx.Abort()
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 	}
 
 	ctx.JSON(http.StatusOK, profile)

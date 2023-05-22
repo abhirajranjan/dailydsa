@@ -6,17 +6,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type databasebridge interface{}
+
 type QuestionFormat struct {
 	Link       string `json:"link"`
 	Name       string `json:"name"`
 	Difficulty string `json:"difficulty"`
 }
 
-func Register(group *gin.RouterGroup) {
-	group.GET("", GetCurrentQuestion)
+func Register(group *gin.RouterGroup, db databasebridge) {
+	group.GET("", func(ctx *gin.Context) {
+		GetCurrentQuestion(ctx, db)
+	})
 }
 
-func GetCurrentQuestion(ctx *gin.Context) {
+func GetCurrentQuestion(ctx *gin.Context, db databasebridge) {
 	//TODO: fetch current question
 	res := QuestionFormat{
 		Name:       "2sum",

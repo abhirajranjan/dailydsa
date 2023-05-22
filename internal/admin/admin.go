@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Register(group *gin.RouterGroup) {
-	// FIXME: admin as also /daily ?
+type databasebridge interface{}
+
+func Register(group *gin.RouterGroup, db databasebridge) {
+
 }

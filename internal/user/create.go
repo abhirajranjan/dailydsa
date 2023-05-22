@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/abhirajranjan/dailydsa/internal/auth"
-	"github.com/abhirajranjan/dailydsa/internal/database"
 	"github.com/abhirajranjan/dailydsa/internal/model"
 	"github.com/gin-gonic/gin"
 	"github.com/mitchellh/mapstructure"
@@ -14,7 +13,7 @@ type jwtrequest struct {
 	JwtToken string `json:"jwt"`
 }
 
-func createUserHandler(ctx *gin.Context) {
+func createUserHandler(ctx *gin.Context, db databasebridge) {
 	var Jwtrequest jwtrequest
 	var jwtres model.JWT
 
@@ -33,7 +32,7 @@ func createUserHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, "exceeding/limiting tags specified")
 	}
 
-	tempid, err := database.CreateUser(&jwtres)
+	tempid, err := db.CreateUser(&jwtres)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, "internal server error")
 	}

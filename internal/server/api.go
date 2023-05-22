@@ -3,11 +3,20 @@ package server
 import (
 	"github.com/abhirajranjan/dailydsa/internal/admin"
 	"github.com/abhirajranjan/dailydsa/internal/daily"
+	"github.com/abhirajranjan/dailydsa/internal/model"
+	"github.com/abhirajranjan/dailydsa/internal/permissions"
 	"github.com/abhirajranjan/dailydsa/internal/user"
 	"github.com/gin-gonic/gin"
 )
 
-func Serve() *gin.Engine {
+type databasebridge interface {
+	CreateUser(jwt *model.JWT) (int, error)
+	GetUserRolesBySessionID(sessionID int) (permissions.Permissions, error)
+	GetProfileBySessionID(sessionID int) (*model.UserProfileModel, error)
+	GetHistoryBySessionID(int) (*model.HistoryResponse, error)
+}
+
+func Serve(db databasebridge) *gin.Engine {
 	engine := gin.New()
 
 	// group uri
@@ -16,9 +25,9 @@ func Serve() *gin.Engine {
 	dailyUri := engine.Group("/daily")
 
 	// register endpoints
-	user.Register(userUri)
-	admin.Register(adminUri)
-	daily.Register(dailyUri)
+	user.Register(userUri, db)
+	admin.Register(adminUri, db)
+	daily.Register(dailyUri, db)
 	return engine
 
 }

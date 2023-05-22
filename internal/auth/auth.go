@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/abhirajranjan/dailydsa/internal/database"
 	"github.com/abhirajranjan/dailydsa/internal/permissions"
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +13,18 @@ const (
 	// cookieTag is mapped to jwt in cookies of requests
 	cookieTag = "auth"
 )
+
+var (
+	auth authHandler
+)
+
+func InitAuth(database databasebridge, cfg AuthConfig) {
+	auth = authHandler{dbbridge: database, AuthConfig: cfg}
+}
+
+type databasebridge interface {
+	GetUserRolesBySessionID(sessionID int) (permissions.Permissions, error)
+}
 
 func ValidateAuthHandler(reqperm permissions.Permissions) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -41,7 +52,8 @@ func ValidateAuthHandler(reqperm permissions.Permissions) gin.HandlerFunc {
 
 // validate user cookie
 //
-// returns true if user is valid for required permissions
+// returns true if user is valid for required permissions.
+// if successful, set session ID to ctx as "sessionID"
 func validateAuth(ctx *gin.Context, requiredperm permissions.Permissions) bool {
 	var sessionID_string string
 	var sessionID int
@@ -67,7 +79,7 @@ func validateAuth(ctx *gin.Context, requiredperm permissions.Permissions) bool {
 
 	ctx.Set("sessionID", sessionID)
 
-	userroles, err := database.GetUserRolesBySessionID(sessionID)
+	userroles, err := auth.dbbridge.GetUserRolesBySessionID(sessionID)
 	if err != nil {
 		ctx.Error(ginErr(http.StatusInternalServerError, "database failure", gin.ErrorTypePrivate))
 		return false
