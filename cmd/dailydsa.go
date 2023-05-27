@@ -14,7 +14,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	print(cfg)
 	db := database.CreateDatabaseBridge(cfg.Database)
 	auth.InitAuth(db, cfg.Auth)
 	a := server.Serve(db)

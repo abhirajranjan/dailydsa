@@ -12,8 +12,8 @@ import (
 type databasebridge interface {
 	CreateUser(jwt *model.JWT) (int, error)
 	GetUserRolesBySessionID(sessionID int) (permissions.Permissions, error)
-	GetProfileBySessionID(sessionID int) (*model.UserProfileModel, error)
-	GetHistoryBySessionID(int) (*model.HistoryResponse, error)
+	GetProfileBySessionID(sessionID int) (*model.ModelUser, error)
+	GetHistoryBySessionID(int) ([]model.ModelSubmission, error)
 }
 
 func Serve(db databasebridge) *gin.Engine {
