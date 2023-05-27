@@ -53,10 +53,25 @@ func (m multipermission) Has(perm Permissions) bool {
 	return false
 }
 
-func MultiPermission(perms ...permission) (multiperm multipermission) {
+func MultiPermission(perms ...Permissions) (multiperm multipermission) {
 	multiperm = make(multipermission)
 	for i, perm := range perms {
-		multiperm[perm] = i
+		if tmultiperm, e := perm.(multipermission); e {
+			for tperm, j := range tmultiperm {
+				multiperm[tperm] = j
+			}
+		} else if tperm, e := perm.(permission); e {
+			multiperm[tperm] = i
+		}
 	}
 	return
+}
+
+func ToPermission(i int) permission {
+	return toPermission(i)
+}
+
+func toPermission(i interface{}) permission {
+	a, _ := i.(permission)
+	return a
 }
