@@ -1,0 +1,37 @@
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/violet.css';
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/violet.css';
+
+.navbar {
+   width: 100%;
+   display: flex;
+   height: 48px;
+   align-items: center;
+   padding: 6px;
+   box-sizing: border-box;
+}
+
+.title-container{
+  position: relative;
+  margin: auto;
+  text-decoration: none;
+}
+
+.title {
+   color: black;
+   font-family: Inter var,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;;
+   font-weight: 500;
+}
+
+.logincta {
+  right: 6px;
+  margin-left: auto;
+  display: block;
+  position: absolute;
+}
+
+.user-icon:hover {
+   background-color: rgba(232,234,237);
+}

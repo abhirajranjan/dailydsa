@@ -1,0 +1,20 @@
+.popavatar {
+    height: 60px !important;
+    width: 60px !important;
+    align-self: center;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
